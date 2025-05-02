@@ -1,0 +1,96 @@
+.filter-bar {
+    background-color: #0b0c10;
+    padding: 1rem 2rem;
+    color: white;
+  }
+  
+  .filter-bar__controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .filter-bar__search-btn, 
+  .filter-bar__all-filters {
+    background-color: #1c1d24;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .filter-bar__sort select {
+    background-color: #1c1d24;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+  }
+  
+  .filter-bar__expanded {
+    margin-top: 1rem;
+    border-top: 1px solid #2c2d34;
+    padding-top: 1rem;
+  }
+  
+  .filter-bar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .filter-text {
+    color: #6c6d71;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .filter-bar__reset {
+    background: none;
+    border: none;
+    color: #6c6d71;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .filter-bar__options {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .filter-dropdown {
+    background-color: transparent;
+    border: 1px solid #2c2d34;
+    border-radius: 4px;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+  }
+  
+  .filter-bar__results {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #2c2d34;
+  }
+  
+  .results-count {
+    color: #6c6d71;
+    font-size: 0.9rem;
+  }
+  
