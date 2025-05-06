@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
+
+.main-content {
+  flex: 1; /* This makes the content area expand to fill available space */
+}
+
+/* Ensure the footer stays at the bottom */
+footer {
+  margin-top: auto;
+}

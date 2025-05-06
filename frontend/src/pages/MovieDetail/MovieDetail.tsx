@@ -91,18 +91,7 @@ const MovieDetail = () => {
         >
           Trailers
         </button>
-        <button 
-          className={`tab ${activeTab === 'charts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('charts')}
-        >
-          Streaming Charts
-        </button>
-        <button 
-          className={`tab ${activeTab === 'similar' ? 'active' : ''}`}
-          onClick={() => setActiveTab('similar')}
-        >
-          Similar titles
-        </button>
+             
       </div>
 
       {/* Tab content */}
