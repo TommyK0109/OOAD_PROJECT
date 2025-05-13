@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './MovieDetail.css';
 import { getMovieById } from '../../services/movieService';
 import { CreateParty, JoinParty } from '../../components/Party';
 import { Movie } from '../../types/movie';
+import { useWatchlist } from '../../context/WatchlistContext';
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [activeTab, setActiveTab] = useState('synopsis');
   const [loading, setLoading] = useState(true);
   const [showPartyModal, setShowPartyModal] = useState<'create' | 'join' | null>(null);
   const [showPartyOptions, setShowPartyOptions] = useState(false);
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -34,6 +37,16 @@ const MovieDetail = () => {
     setShowPartyOptions(true);
   };
 
+  const handleWatchLaterClick = () => {
+    if (!movie || !id) return;
+
+    if (isInWatchlist(id)) {
+      removeFromWatchlist(id);
+    } else {
+      addToWatchlist(movie);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -41,6 +54,8 @@ const MovieDetail = () => {
   if (!movie) {
     return <div className="error">Movie not found</div>;
   }
+
+  const inWatchlist = id ? isInWatchlist(id) : false;
 
   return (
     <div className="movie-detail">
@@ -59,9 +74,20 @@ const MovieDetail = () => {
               </span>
               <span className="movie-detail__runtime">{movie.runtime || '23min'}</span>
             </div>
-            <button className="movie-detail__play-btn" onClick={handlePlayClick}>
-              <span className="play-icon">▶</span> Play
-            </button>
+            <div className="movie-detail__actions">
+              <button className="movie-detail__play-btn" onClick={handlePlayClick}>
+                <span className="play-icon">▶</span> Play
+              </button>
+              <button 
+                className={`movie-detail__watchlater-btn ${inWatchlist ? 'active' : ''}`} 
+                onClick={handleWatchLaterClick}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill={inWatchlist ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                {inWatchlist ? 'Added to Watchlist' : 'Watch Later'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -69,36 +95,26 @@ const MovieDetail = () => {
       {/* Navigation tabs */}
       <div className="movie-detail__tabs">
         <button 
-          className={`tab ${activeTab === 'watch' ? 'active' : ''}`}
-          onClick={() => setActiveTab('watch')}
-        >
-          Where to watch
-        </button>
-        <button 
-          className={`tab ${activeTab === 'free' ? 'active' : ''}`}
-          onClick={() => setActiveTab('free')}
-        >
-          Watch for free
-        </button>
-        <button 
           className={`tab ${activeTab === 'episodes' ? 'active' : ''}`}
           onClick={() => setActiveTab('episodes')}
+          data-tab="episodes"
         >
           Episodes
         </button>
         <button 
           className={`tab ${activeTab === 'synopsis' ? 'active' : ''}`}
           onClick={() => setActiveTab('synopsis')}
+          data-tab="synopsis"
         >
           Synopsis
         </button>
         <button 
           className={`tab ${activeTab === 'trailers' ? 'active' : ''}`}
           onClick={() => setActiveTab('trailers')}
+          data-tab="trailers"
         >
           Trailers
         </button>
-             
       </div>
 
       {/* Tab content */}
@@ -145,47 +161,16 @@ const MovieDetail = () => {
           </div>
         )}
         
-        {activeTab === 'watch' && (
-          <div className="movie-detail__watch-options">
-            <h2>WATCH NOW</h2>
-            <div className="watch-filters">
-              <button className="filter-btn active">All</button>
-              <button className="filter-btn">Subscription</button>
-              <button className="filter-btn">Free</button>
-            </div>
-            
-            <div className="streaming-options">
-              <div className="streaming-option">
-                <div className="service-info">
-                  <div className="service-logo netflix">NETFLIX</div>
-                  <div className="service-details">
-                    <p className="quality-tags">
-                      <span className="tag">CC</span>
-                      <span className="tag">HD</span>
-                    </p>
-                    <p className="season-info">1 Season - 23min - Japanese</p>
-                  </div>
+        {activeTab === 'trailers' && (
+          <div className="movie-detail__trailers">
+            <h2>Trailers & Videos</h2>
+            <div className="trailers-grid">
+              <div className="trailer-item">
+                <div className="trailer-thumbnail">
+                  <img src={movie.posterUrl} alt="Trailer thumbnail" />
+                  <button className="trailer-play-btn">▶</button>
                 </div>
-                <div className="service-price">
-                  <p className="price-type">Subscription</p>
-                  <p className="price-amount">₹149.00/month</p>
-                  <button className="watch-now-btn">▶ Watch Now</button>
-                </div>
-              </div>
-              
-              <div className="streaming-option prime">
-                <div className="service-info">
-                  <div className="service-logo prime">prime video</div>
-                  <div className="service-details">
-                    <p>Watch similar TV shows for free</p>
-                    <p>on Prime Video</p>
-                  </div>
-                </div>
-                <div className="service-price">
-                  <p className="price-type">30 Days Free</p>
-                  <p className="price-amount">Then ₹299.00/month</p>
-                  <button className="stream-free-btn">▶ Stream Free</button>
-                </div>
+                <p>Official Trailer (2023)</p>
               </div>
             </div>
           </div>
@@ -244,8 +229,7 @@ const MovieDetail = () => {
                 className="party-option-btn solo"
                 onClick={() => {
                   setShowPartyOptions(false);
-                  // Handle solo watch here - e.g., navigate to /watch/${id}
-                  console.log('Watch solo');
+                  navigate(`/watch/solo/${id}`);
                 }}
               >
                 Watch Solo

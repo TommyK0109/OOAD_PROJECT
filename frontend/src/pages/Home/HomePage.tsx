@@ -1,5 +1,6 @@
 // src/pages/Home/HomePage.tsx
 import { useState, useEffect } from 'react';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom'; // Add useNavigate import
 import './HomePage.css';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import FilterBar from '../../components/FilterBar/FilterBar';
@@ -7,16 +8,23 @@ import { getPopularMovies } from '../../services/movieService';
 import { Movie } from '../../types/movie';
 
 const HomePage = () => {
+  const navigate = useNavigate(); // Add this line to initialize the navigate function
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({});
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const selectedGenre = searchParams.get('genre');
+  const { genreName } = location.state || {};
 
   useEffect(() => {
     const loadMovies = async () => {
       try {
         setLoading(true);
+        
         const data = await getPopularMovies();
+        
         setMovies(data);
         setFilteredMovies(data);
       } catch (error) {
@@ -57,6 +65,18 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
+      {selectedGenre && genreName && (
+        <div className="genre-header">
+          <h1>{genreName}</h1>
+          <button 
+            className="clear-genre" 
+            onClick={() => navigate('/')}
+          >
+            Clear Filter
+          </button>
+        </div>
+      )}
+      
       <FilterBar onFilterChange={handleFilterChange} />
       
       <div className="movie-grid">
@@ -68,6 +88,7 @@ const HomePage = () => {
             imageUrl={movie.posterUrl}
             year={movie.year}
             rating={movie.rating}
+            genres={movie.genres}
           />
         ))}
       </div>
