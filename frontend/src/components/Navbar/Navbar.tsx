@@ -26,8 +26,7 @@ const Navbar = () => {
           </Link>
           <div className="navbar__links">
             <Link to="/genres" className="navbar__link">Genres</Link>
-            <Link to="/watchlist" className="navbar__link">Watchlist</Link>
-            <Link to="/party" className="navbar__link">Party</Link>
+            <Link to="/watchlist" className="navbar__link">Watchlist</Link>            
           </div>
         </div>
         

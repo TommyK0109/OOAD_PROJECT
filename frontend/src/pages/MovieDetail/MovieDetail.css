@@ -309,4 +309,130 @@
     width: 100%;
     border-radius: 8px;
   }
+
+  .movie-detail__actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
   
+  .movie-detail__party-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .movie-detail__party-btn.create {
+    background-color: #00c8ff;
+    border: none;
+    color: #0b0c10;
+  }
+  
+  .movie-detail__party-btn.join {
+    background-color: transparent;
+    border: 1px solid #00c8ff;
+    color: #00c8ff;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+
+  /* Party options modal */
+  .party-options-modal {
+    background-color: #0b0c10;
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+    border: 1px solid rgba(0, 200, 255, 0.2);
+  }
+
+  .party-options-modal h2 {
+    color: #00c8ff;
+    margin-bottom: 1rem;
+  }
+
+  .party-options-modal p {
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+
+  .party-options-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .party-option-btn {
+    padding: 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+  }
+
+  .party-option-btn.create {
+    background-color: #00c8ff;
+    border: none;
+    color: #0b0c10;
+  }
+
+  .party-option-btn.create:hover {
+    background-color: #00a8e1;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+  }
+
+  .party-option-btn.join {
+    background-color: transparent;
+    border: 1px solid #00c8ff;
+    color: #00c8ff;
+  }
+
+  .party-option-btn.join:hover {
+    background-color: rgba(0, 200, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
+  }
+
+  .party-option-btn.solo {
+    background-color: transparent;
+    border: 1px solid #a7a9ac;
+    color: #a7a9ac;
+  }
+
+  .party-option-btn.solo:hover {
+    background-color: rgba(167, 169, 172, 0.1);
+    color: white;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    color: #a7a9ac;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .close-button:hover {
+    color: white;
+  }
+

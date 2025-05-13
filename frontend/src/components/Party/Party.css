@@ -1,0 +1,205 @@
+.party-modal {
+  background-color: #0b0c10;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 550px;
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.party-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #1c1d24;
+}
+
+.party-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #00c8ff;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #a7a9ac;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.party-modal-content {
+  padding: 1.5rem;
+}
+
+.selected-movie {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #1c1d24;
+}
+
+.movie-poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.movie-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.movie-info h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.movie-info p {
+  margin: 0;
+  color: #a7a9ac;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #a7a9ac;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #1c1d24;
+  border: 1px solid #2c2d34;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input {
+  width: auto;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancel-button,
+.create-button,
+.join-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: transparent;
+  border: 1px solid #2c2d34;
+  color: white;
+}
+
+.create-button,
+.join-button {
+  background-color: #00c8ff;
+  border: none;
+  color: #0b0c10;
+}
+
+/* Party List Styles */
+.party-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.party-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1c1d24;
+  border-radius: 4px;
+  border-left: 3px solid #00c8ff;
+}
+
+.party-name {
+  margin: 0 0 0.5rem 0;
+}
+
+.party-host {
+  margin: 0 0 0.5rem 0;
+  color: #a7a9ac;
+  font-size: 0.9rem;
+}
+
+.party-details {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #a7a9ac;
+}
+
+.party-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.private-badge {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.loading-spinner,
+.error-message,
+.no-parties {
+  text-align: center;
+  padding: 2rem;
+  color: #a7a9ac;
+}
+
+.password-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.password-form h3 {
+  margin-top: 0;
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './MovieDetail.css';
 import { getMovieById } from '../../services/movieService';
+import { CreateParty, JoinParty } from '../../components/Party';
 import { Movie } from '../../types/movie';
 
 const MovieDetail = () => {
@@ -9,6 +10,8 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [activeTab, setActiveTab] = useState('synopsis');
   const [loading, setLoading] = useState(true);
+  const [showPartyModal, setShowPartyModal] = useState<'create' | 'join' | null>(null);
+  const [showPartyOptions, setShowPartyOptions] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -26,6 +29,10 @@ const MovieDetail = () => {
 
     fetchMovieDetails();
   }, [id]);
+
+  const handlePlayClick = () => {
+    setShowPartyOptions(true);
+  };
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -52,7 +59,7 @@ const MovieDetail = () => {
               </span>
               <span className="movie-detail__runtime">{movie.runtime || '23min'}</span>
             </div>
-            <button className="movie-detail__play-btn">
+            <button className="movie-detail__play-btn" onClick={handlePlayClick}>
               <span className="play-icon">▶</span> Play
             </button>
           </div>
@@ -206,6 +213,80 @@ const MovieDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Party options popup */}
+      {showPartyOptions && (
+        <div className="modal-overlay" onClick={() => setShowPartyOptions(false)}>
+          <div className="party-options-modal" onClick={e => e.stopPropagation()}>
+            <h2>Watch Options</h2>
+            <p>How would you like to watch "{movie.title}"?</p>
+            
+            <div className="party-options-buttons">
+              <button 
+                className="party-option-btn create"
+                onClick={() => {
+                  setShowPartyOptions(false);
+                  setShowPartyModal('create');
+                }}
+              >
+                Create New Watch Party
+              </button>
+              <button 
+                className="party-option-btn join"
+                onClick={() => {
+                  setShowPartyOptions(false);
+                  setShowPartyModal('join');
+                }}
+              >
+                Join Existing Watch Party
+              </button>
+              <button 
+                className="party-option-btn solo"
+                onClick={() => {
+                  setShowPartyOptions(false);
+                  // Handle solo watch here - e.g., navigate to /watch/${id}
+                  console.log('Watch solo');
+                }}
+              >
+                Watch Solo
+              </button>
+            </div>
+            
+            <button 
+              className="close-button"
+              onClick={() => setShowPartyOptions(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Party modals */}
+      {showPartyModal === 'create' && (
+        <div className="modal-overlay" onClick={() => setShowPartyModal(null)}>
+          <div onClick={e => e.stopPropagation()}>
+            <CreateParty
+              movieId={id || ''}
+              movieTitle={movie.title}
+              posterUrl={movie.posterUrl}
+              onClose={() => setShowPartyModal(null)}
+            />
+          </div>
+        </div>
+      )}
+
+      {showPartyModal === 'join' && (
+        <div className="modal-overlay" onClick={() => setShowPartyModal(null)}>
+          <div onClick={e => e.stopPropagation()}>
+            <JoinParty
+              movieId={id || ''}
+              movieTitle={movie.title}
+              onClose={() => setShowPartyModal(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
