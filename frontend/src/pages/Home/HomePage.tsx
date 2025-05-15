@@ -1,30 +1,37 @@
 // src/pages/Home/HomePage.tsx
 import { useState, useEffect } from 'react';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom'; // Add useNavigate import
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import FilterBar from '../../components/FilterBar/FilterBar';
-import { getPopularMovies } from '../../services/movieService';
+import { getPopularMovies, getFilteredMovies } from '../../services/movieService';
 import { Movie } from '../../types/movie';
+import { MovieFilters } from '../../types/filters';
 
 const HomePage = () => {
-  const navigate = useNavigate(); // Add this line to initialize the navigate function
+  const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<MovieFilters>({
+    releaseYear: '',
+    genres: [],
+    rating: '',
+    mediaType: 'all',
+    country: '',
+    sortBy: 'popularity'
+  });
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const selectedGenre = searchParams.get('genre');
   const { genreName } = location.state || {};
 
+  // Initial load of movies
   useEffect(() => {
     const loadMovies = async () => {
       try {
         setLoading(true);
-        
         const data = await getPopularMovies();
-        
         setMovies(data);
         setFilteredMovies(data);
       } catch (error) {
@@ -37,31 +44,40 @@ const HomePage = () => {
     loadMovies();
   }, []);
 
-  const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-    
-    // Apply filters to movies
-    let filtered = [...movies];
-    
-    // Example filter logic (expand as needed)
-    if (newFilters.rating) {
-      filtered = filtered.filter(movie => 
-        (movie.rating || '0') >= newFilters.rating
-      );
+  // Handle URL parameter for genre filter
+  useEffect(() => {
+    if (selectedGenre) {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        genres: [selectedGenre]
+      }));
     }
-    
-    if (newFilters.genres && newFilters.genres.length > 0) {
-      filtered = filtered.filter(movie => 
-        movie.genres?.some(genre => newFilters.genres.includes(genre))
-      );
-    }
-    
-    setFilteredMovies(filtered);
-  };
+  }, [selectedGenre]);
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
+  // Apply filters when they change
+  useEffect(() => {
+    // Skip initial render with default filters
+    if (!movies.length) return;
+    
+    const applyFilters = async () => {
+      setLoading(true);
+      try {
+        console.log('Applying filters:', filters);
+        const filtered = await getFilteredMovies(filters);
+        setFilteredMovies(filtered);
+      } catch (error) {
+        console.error('Error applying filters:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    applyFilters();
+  }, [filters, movies.length]);
+
+  const handleFilterChange = (newFilters: MovieFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className="home-page">
@@ -77,21 +93,32 @@ const HomePage = () => {
         </div>
       )}
       
-      <FilterBar onFilterChange={handleFilterChange} />
+      <FilterBar 
+        onFilterChange={handleFilterChange} 
+        totalResults={filteredMovies.length}
+      />
       
-      <div className="movie-grid">
-        {filteredMovies.map(movie => (
-          <MovieCard 
-            key={movie.id}
-            id={movie.id}
-            title={movie.title}
-            imageUrl={movie.posterUrl}
-            year={movie.year}
-            rating={movie.rating}
-            genres={movie.genres}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="loading">Loading...</div>
+      ) : (
+        <div className="movie-grid">
+          {filteredMovies.length > 0 ? (
+            filteredMovies.map(movie => (
+              <MovieCard 
+                key={movie.id}
+                id={movie.id}
+                title={movie.title}
+                imageUrl={movie.posterUrl}
+                year={movie.year}
+                rating={movie.rating}
+                genres={movie.genres}
+              />
+            ))
+          ) : (
+            <div className="no-results">No movies match your current filters</div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

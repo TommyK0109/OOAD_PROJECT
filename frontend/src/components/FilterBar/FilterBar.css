@@ -135,3 +135,32 @@
   font-size: 0.9rem;
   text-shadow: 0 0 3px rgba(80, 231, 251, 0.5);
 }
+
+.selected-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.genre-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+
+.genre-tag button {
+  background: none;
+  border: none;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.genre-tag button:hover {
+  color: white;
+}

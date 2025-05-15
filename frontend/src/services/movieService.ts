@@ -1,4 +1,5 @@
 import { Movie } from '../types/movie';
+import { MovieFilters } from '../types/filters';
 
 // Mock data for development
 const mockMovies: Movie[] = [
@@ -62,6 +63,88 @@ export const getMovieById = async (id: string): Promise<Movie | undefined> => {
     setTimeout(() => {
       const movie = mockMovies.find(movie => movie.id === id);
       resolve(movie);
+    }, 500);
+  });
+};
+
+export const getFilteredMovies = async (filters: MovieFilters): Promise<Movie[]> => {
+  // This would be an API call with filter parameters in production
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Filtering movies with:', filters);
+      let filteredMovies = [...mockMovies];
+      
+      // Filter by release year
+      if (filters.releaseYear) {
+        filteredMovies = filteredMovies.filter(movie => 
+          movie.year?.toString() === filters.releaseYear
+        );
+      }
+      
+      // Filter by genres
+      if (filters.genres && filters.genres.length > 0) {
+        filteredMovies = filteredMovies.filter(movie => 
+          movie.genres?.some(genre => 
+            filters.genres?.some(g => genre.includes(g))
+          )
+        );
+      }
+      
+      // Filter by rating
+      if (filters.rating) {
+        const minRating = parseInt(filters.rating);
+        filteredMovies = filteredMovies.filter(movie => {
+          let movieRating = 0;
+          
+          if (movie.imdbRating) {
+            movieRating = parseFloat(movie.imdbRating);
+          } else if (movie.rating && movie.rating.includes('%')) {
+            movieRating = parseFloat(movie.rating) / 10;
+          }
+          
+          return !isNaN(movieRating) && movieRating >= minRating;
+        });
+      }
+      
+      // Filter by media type - only apply if not 'all'
+      if (filters.mediaType && filters.mediaType !== 'all') {
+        filteredMovies = filteredMovies.filter(movie => {
+          // Determine media type based on episodes property
+          const isTVShow = movie.episodes !== undefined;
+          return (filters.mediaType === 'tvshow' && isTVShow) || 
+                 (filters.mediaType === 'movie' && !isTVShow);
+        });
+      }
+      
+      // Filter by country
+      if (filters.country) {
+        filteredMovies = filteredMovies.filter(movie => 
+          movie.country?.includes(filters.country || '')
+        );
+      }
+      
+      // Sort results
+      if (filters.sortBy) {
+        switch (filters.sortBy) {
+          case 'alphabetical':
+            filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
+            break;
+          case 'releaseDate':
+            filteredMovies.sort((a, b) => (b.year || 0) - (a.year || 0));
+            break;
+          case 'rating':
+            filteredMovies.sort((a, b) => {
+              const aRating = parseFloat(a.imdbRating || '0');
+              const bRating = parseFloat(b.imdbRating || '0');
+              return bRating - aRating;
+            });
+            break;
+          // popularity is default
+        }
+      }
+      
+      console.log('Filtered results:', filteredMovies.length);
+      resolve(filteredMovies);
     }, 500);
   });
 };

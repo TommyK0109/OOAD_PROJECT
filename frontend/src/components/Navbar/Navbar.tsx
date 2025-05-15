@@ -24,8 +24,7 @@ const Navbar = () => {
             <img src={logo} alt="WatchParty" />
             <span className="navbar__name">WatchParty</span>
           </Link>
-          <div className="navbar__links">
-            <Link to="/genres" className="navbar__link">Genres</Link>
+          <div className="navbar__links">            
             <Link to="/watchlist" className="navbar__link">Watchlist</Link>            
           </div>
         </div>
