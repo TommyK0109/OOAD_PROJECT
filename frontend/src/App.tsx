@@ -3,13 +3,17 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import HomePage from './pages/Home/HomePage';
 import MovieDetail from './pages/MovieDetail/MovieDetail';
+import WatchPage from './pages/Watch/WatchPage';
+import WatchlistPage from './pages/Watchlist/Watchlist'; // Add this import
 import Footer from './components/Footer/Footer';
+import { WebSocketProvider } from './context/WebSocketContext';
+import { WatchlistProvider } from './context/WatchlistContext'; // Add this import
 
 // Create a wrapper component that handles the conditional rendering
 const AppContent = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '/popular';
-  
+
   return (
     <div className="app">
       <Navbar />
@@ -18,20 +22,26 @@ const AppContent = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/popular" element={<HomePage />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
-          {/* Add other routes as needed */}
-          <Route path="*" element={<div className="not-found">Page Not Found</div>} />
+          <Route path="/watch/:partyId" element={<WatchPage />} />
+          <Route path="/watch/solo/:movieId" element={<WatchPage />} />
+          <Route path="/watchlist" element={<WatchlistPage />} /> {/* Add this route */}
         </Routes>
       </div>
-      {/* Only show Footer when NOT on home page */}
-      {!isHomePage && <Footer />}
+      {!isHomePage && <Footer />} {/* Changed from isHomePage to !isHomePage */}
     </div>
   );
 };
 
 const App = () => {
+  const WEBSOCKET_URL = 'ws://localhost:8080/ws';
+
   return (
     <Router>
-      <AppContent />
+      <WebSocketProvider url={WEBSOCKET_URL}>
+        <WatchlistProvider> {/* Add this provider */}
+          <AppContent />
+        </WatchlistProvider>
+      </WebSocketProvider>
     </Router>
   );
 };
