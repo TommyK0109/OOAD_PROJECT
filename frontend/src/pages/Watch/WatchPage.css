@@ -1,31 +1,65 @@
 .participants-section {
   padding: 1rem;
   border-bottom: 1px solid #2c2d34;
+  margin-bottom: 15px;
 }
 
 .participants-section h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .participants-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 .chat-section {
   flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex: 1;
+  max-width: 350px;
+  background-color: #0f1015;
+  border-left: 1px solid #1c1d24;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.closed {
+  max-width: 40px;
+}
+
+.sidebar-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #1c1d24;
+}
+
+.sidebar-header h2 {
+  color: white;
+  font-size: 16px;
+  margin: 0;
+}
+
+.toggle-chat {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .sidebar-content {
+  padding: 15px;
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
-  height: calc(100% - 65px); /* Adjust based on sidebar header height */
-  overflow: hidden;
 }
 
 .sidebar.closed .sidebar-content {
@@ -33,16 +67,245 @@
 }
 
 .watch-page {
+  min-height: 100vh;
   display: flex;
+  flex-direction: row;
+  background-color: #000;
+  position: relative;
+}
+
+.watch-page.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
   height: 100vh;
-  background-color: #0b0c10;
+}
+
+.loader {
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid #50e7fb;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Video container styles */
+.video-container {
+  flex: 1;
+  position: relative;
+  height: 100vh;
+  background-color: #000;
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Video overlay for play/pause on click */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-play-button {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-play-button span {
+  font-size: 30px;
   color: white;
 }
 
-.watch-page.solo-mode .video-container {
-  width: 100%; /* Full width in solo mode */
+/* Video controls */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
 }
 
-.watch-page.party-mode .video-container {
-  width: 70%; /* Reduced width to make room for sidebar in party mode */
+.video-container:hover .video-controls {
+  opacity: 1;
+}
+
+/* Progress bar */
+.progress-bar-container {
+  width: 100%;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.progress-bar-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #50e7fb;
+}
+
+.progress-bar-loaded {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Control buttons layout */
+.control-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+}
+
+.left-controls, .right-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Buttons styling */
+.control-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+}
+
+.control-button:hover {
+  color: #50e7fb;
+}
+
+.skip-forward, .skip-backward {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.skip-forward span, .skip-backward span {
+  font-size: 16px;
+}
+
+/* Time display */
+.time-display {
+  color: white;
+  font-size: 14px;
+}
+
+/* Volume controls */
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.volume-slider {
+  width: 70px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  -webkit-appearance: none;
+  border-radius: 2px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Party mode and sidebar styles */
+.party-mode {
+  display: flex;
+}
+
+.party-mode .video-container {
+  flex: 3;
+}
+
+.party-mode .sidebar {
+  flex: 1;
+  max-width: 350px;
+}
+
+.party-mode .sidebar.closed {
+  max-width: 40px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .watch-page {
+    flex-direction: column;
+  }
+  
+  .video-container {
+    height: 40vh;
+  }
+  
+  .sidebar {
+    max-width: 100%;
+    height: 60vh;
+    border-left: none;
+    border-top: 1px solid #1c1d24;
+  }
+  
+  .sidebar.closed {
+    max-height: 40px;
+    max-width: 100%;
+  }
+  
+  .control-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .skip-forward, .skip-backward {
+    display: none;
+  }
 }
