@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import './WatchPage.css';
 import ChatContainer from '../../components/Chat/ChatContainer';
-import ConnectionStatus from '../../components/Status/ConnectionStatus';
-import ParticipantStatus from '../../components/Status/ParticipantStatus';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import ReactPlayer from 'react-player';
 
@@ -373,22 +371,6 @@ const WatchPage = () => {
           </div>
           
           <div className="sidebar-content">
-            <ConnectionStatus />
-            
-            <div className="participants-section">
-              <h3>Viewers ({participants.length})</h3>
-              <div className="participants-list">
-                {participants.map(participant => (
-                  <ParticipantStatus
-                    key={participant.id}
-                    username={participant.username}
-                    isActive={participant.isActive}
-                    isHost={participant.isHost}
-                  />
-                ))}
-              </div>
-            </div>
-            
             <div className="chat-section">
               <ChatContainer partyId={partyId || ''} />
             </div>
