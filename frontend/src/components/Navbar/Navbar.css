@@ -84,6 +84,13 @@
   width: 300px;
   border: 1px solid rgba(255, 0, 255, 0.2);
   box-shadow: 0 0 5px rgba(255, 0, 255, 0.2);
+  position: relative;
+}
+
+.navbar__search form {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .search-icon {

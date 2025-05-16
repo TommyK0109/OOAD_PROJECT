@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import AuthModal from '../AuthModal/AuthModal';
-import logo from '../../assets/logo.png'; // Add your logo to assets
+import SearchDropdown from '../Search/SearchDropdown';
+import logo from '../../assets/logo.png';
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
@@ -15,6 +19,32 @@ const Navbar = () => {
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
   };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setShowSearchDropdown(false);
+    }
+  };
+
+  const handleInputFocus = () => {
+    setShowSearchDropdown(true);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -29,14 +59,23 @@ const Navbar = () => {
           </div>
         </div>
         
-        <div className="navbar__search">
-          <span className="search-icon">🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search for movies or TV shows"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="navbar__search" ref={searchRef}>
+          <form onSubmit={handleSearchSubmit}>
+            <span className="search-icon">🔍</span>
+            <input 
+              type="text" 
+              placeholder="Search for movies or TV shows"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={handleInputFocus}
+            />
+          </form>
+          {showSearchDropdown && (
+            <SearchDropdown 
+              query={searchQuery} 
+              onClose={() => setShowSearchDropdown(false)}
+            />
+          )}
         </div>
         
         <div className="navbar__right">
