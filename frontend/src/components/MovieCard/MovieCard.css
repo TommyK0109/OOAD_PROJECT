@@ -20,6 +20,43 @@
     z-index: 2;
     color: rgba(255, 255, 255, 0.7);
     font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .movie-card__bookmark svg {
+    transition: all 0.3s ease;
+  }
+  
+  .movie-card__bookmark.hovered {
+    color: #ff00ff;
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 0, 255, 0.7);
+    text-shadow: 0 0 5px rgba(255, 0, 255, 0.7);
+  }
+  
+  .movie-card__bookmark.active {
+    color: #ff00ff;
+    box-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+  }
+  
+  .movie-card__bookmark.active.hovered {
+    transform: scale(1.1);
+    box-shadow: 
+      0 0 10px rgba(255, 0, 255, 0.8),
+      0 0 20px rgba(255, 0, 255, 0.4);
+  }
+  
+  /* Prevent the card from changing while clicking the bookmark */
+  .movie-card__bookmark:active {
+    transform: scale(0.95);
   }
   
   .movie-card__image {
@@ -73,4 +110,3 @@
   .movie-card__play-btn:hover {
     background-color: rgba(255, 255, 255, 0.3);
   }
-  

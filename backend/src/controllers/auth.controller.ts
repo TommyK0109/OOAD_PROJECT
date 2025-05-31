@@ -47,11 +47,24 @@ export const authController = {
       });
 
       // Generate token
+      const typedUser = user as { _id: any; username: string; role: string };
+      console.log('🔍 User object for JWT:', {
+        userId: typedUser._id.toString(),
+        username: typedUser.username,
+        role: typedUser.role
+      });
+      
       const token = jwt.sign(
-        { userId: user._id, role: user.role },
-        process.env.JWT_SECRET || 'your-secret-key',
+        { userId: typedUser._id.toString(), username: typedUser.username, role: typedUser.role },
+        'a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456',
         { expiresIn: '24h' }
       );
+      
+      console.log('🔍 Generated token payload should be:', {
+        userId: typedUser._id.toString(),
+        username: typedUser.username,
+        role: typedUser.role
+      });
 
       return res.status(201).json({
         message: 'User registered successfully',
@@ -92,9 +105,10 @@ export const authController = {
       }
 
       // Generate token
+      const typedUser = user as { _id: any; username: string; role: string };
       const token = jwt.sign(
-        { userId: user._id, role: user.role },
-        process.env.JWT_SECRET || 'your-secret-key',
+        { userId: typedUser._id.toString(), username: typedUser.username, role: typedUser.role },
+        'a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456',
         { expiresIn: '24h' }
       );
 

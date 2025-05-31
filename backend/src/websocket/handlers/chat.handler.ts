@@ -56,7 +56,7 @@ export async function chatHandler(
 
     // Create chat message object
     const chatMessage: ChatMessageData = {
-      messageId: Number(savedMessage._id.toString()),
+      messageId: savedMessage._id.toString(),
       userId: ws.userId!,
       username: ws.username!,
       content,
@@ -80,7 +80,7 @@ export async function chatHandler(
 }
 
 // Function to load chat history when user joins party
-export async function loadChatHistory(partyId: number, userId: number) {
+export async function loadChatHistory(partyId: string, userId: string) {
   try {
     const ChatMessage = mongoose.model<ChatMessageDocument>('ChatMessage');
     const messages = await ChatMessage.find({ partyId })
@@ -89,8 +89,8 @@ export async function loadChatHistory(partyId: number, userId: number) {
       .limit(100);
 
     const chatHistory = messages.map(msg => ({
-      messageId: msg._id,
-      userId: Number(msg.userId),
+      messageId: msg._id.toString(),
+      userId: msg.userId.toString(),
       username: (msg.userId as any).username,
       content: msg.content,
       timestamp: msg.timestamp

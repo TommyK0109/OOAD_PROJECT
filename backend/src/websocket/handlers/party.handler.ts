@@ -30,7 +30,7 @@ export async function partyHandler(
 async function handleCreateParty(
   manager: WatchPartyManager,
   ws: AuthenticatedWebSocket,
-  payload: { roomName: string; movieId: number }
+  payload: { roomName: string; movieId: string }
 ) {
   try {
     if (ws.partyId) {
@@ -47,7 +47,7 @@ async function handleCreateParty(
       isActive: true
     });
 
-    const partyRoom = manager.createParty(ws, payload.roomName, payload.movieId, party._id);
+    const partyRoom = manager.createParty(ws, payload.roomName, payload.movieId, party._id.toString());
 
     ws.send(JSON.stringify({
       type: WebSocketMessageType.PARTY_CREATED,
@@ -68,7 +68,7 @@ async function handleCreateParty(
 async function handleJoinParty(
   manager: WatchPartyManager,
   ws: AuthenticatedWebSocket,
-  payload: { inviteCode: string }
+  payload: { inviteCode?: string; partyId?: string }
 ) {
   try {
     if (ws.partyId) {
@@ -77,20 +77,56 @@ async function handleJoinParty(
     }
 
     const WatchParty = mongoose.model('WatchParty');
-    const party = await WatchParty.findOne({ inviteCode: payload.inviteCode, isActive: true });
+    let party;
+    
+    // Support both inviteCode and partyId for flexibility
+    if (payload.inviteCode) {
+      console.log(`🔍 Looking up party by invite code: ${payload.inviteCode}`);
+      party = await WatchParty.findOne({ inviteCode: payload.inviteCode, isActive: true });
+    } else if (payload.partyId) {
+      console.log(`🔍 Looking up party by party ID: ${payload.partyId}`);
+      party = await WatchParty.findById(payload.partyId);
+      if (party && !party.isActive) {
+        party = null; // Treat inactive parties as not found
+      }
+    } else {
+      manager.sendError(ws, 'Either inviteCode or partyId is required');
+      return;
+    }
 
     if (!party) {
+      const searchTerm = payload.inviteCode || payload.partyId;
+      console.log(`❌ Party not found for: ${searchTerm}`);
       manager.sendError(ws, 'Invalid invite code');
       return;
     }
 
-    const partyRoom = manager.getParty(party._id);
+    console.log(`✅ Found party: ${party._id} (${party.roomName})`);
+
+    // Get or create the WebSocket party room
+    let partyRoom = manager.getParty(party._id.toString());
     if (!partyRoom) {
-      manager.sendError(ws, 'Party not found');
-      return;
+      // Create the WebSocket room if it doesn't exist
+      console.log(`🔄 WebSocket room not found for party ${party._id}, creating it now`);
+      partyRoom = manager.createParty(
+        ws, // The joining user becomes temporary host for room creation
+        party.roomName,
+        party.currentMovieId.toString(),
+        party._id.toString()
+      );
+      
+      // Add the original host if they're connected
+      const hostConnection = manager.getUserConnection(party.hostId.toString());
+      if (hostConnection && hostConnection.userId !== ws.userId) {
+        partyRoom.addUser(hostConnection);
+        console.log(`🔄 Added original host to WebSocket room`);
+      }
+    } else {
+      // Room exists, just add the user
+      partyRoom.addUser(ws);
     }
 
-    partyRoom.addUser(ws);
+    // Update database
     await WatchParty.updateOne(
       { _id: party._id },
       { $addToSet: { participants: { userId: ws.userId, joinedAt: new Date() } } }
@@ -152,7 +188,7 @@ async function handleLeaveParty(
 async function handleKickUser(
   manager: WatchPartyManager,
   ws: AuthenticatedWebSocket,
-  payload: { userId: number }
+  payload: { userId: string }
 ) {
   try {
     if (!ws.partyId) {

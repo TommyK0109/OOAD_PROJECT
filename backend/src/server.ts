@@ -13,6 +13,7 @@ import { WatchPartyManager } from './websocket/WatchPartyManager';
 
 // Load environment variables
 dotenv.config();
+console.log('Loaded PORT from .env:', process.env.PORT);
 
 const app = express();
 const httpServer = createServer(app);
@@ -26,7 +27,15 @@ watchPartyManager.initialize(wss);
 app.use(helmet());
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    credentials: true
+    credentials: true,
+    allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,10 +49,9 @@ app.get('/health', (_req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Error handling middleware (must be last)
 app.use(errorMiddleware);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 async function startServer() {
     try {
@@ -51,18 +59,30 @@ async function startServer() {
         await initializeDatabase();
         logger.info('Database connection established');
 
-        // Start server
+        // Start server with error handling
         httpServer.listen(PORT, () => {
             logger.info(`Server running on port ${PORT}`);
             logger.info(`WebSocket server ready`);
+        });
+
+        // Handle server listen errors
+        httpServer.on('error', (error: any) => {
+            if (error.code === 'EADDRINUSE') {
+                logger.error(`Port ${PORT} is already in use. Please:`);
+                logger.error('1. Kill the existing process, or');
+                logger.error('2. Change the PORT in your .env file, or');
+                logger.error('3. Use a different port number');
+                process.exit(1);
+            } else {
+                logger.error('Server error:', error);
+                process.exit(1);
+            }
         });
     } catch (error) {
         logger.error('Failed to start server:', error);
         process.exit(1);
     }
 }
-
-// Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
     logger.error('Uncaught Exception:', error);
     process.exit(1);

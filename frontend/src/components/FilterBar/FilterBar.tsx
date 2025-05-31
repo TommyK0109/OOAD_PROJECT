@@ -1,20 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { MovieFilters } from '../../types/filters';
 import './FilterBar.css';
 
 interface FilterBarProps {
-  onFilterChange: (filters: any) => void;
+  onFilterChange: (filters: MovieFilters) => void;
+  totalResults: number;
 }
 
-const FilterBar = ({ onFilterChange }: FilterBarProps) => {
+const FilterBar = ({ onFilterChange, totalResults = 0 }: FilterBarProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('popularity');
-  const [activeFilters, setActiveFilters] = useState({
+  const [activeFilters, setActiveFilters] = useState<MovieFilters>({
     releaseYear: '',
     genres: [],
-    price: '',
     rating: '',
-    ageRating: ''
+    mediaType: 'all',
+    country: '',
+    sortBy: 'popularity'
   });
+
+  // Apply filters whenever they change
+  useEffect(() => {
+    onFilterChange(activeFilters);
+  }, [activeFilters, onFilterChange]);
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
@@ -24,16 +32,46 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
     setActiveFilters({
       releaseYear: '',
       genres: [],
-      price: '',
       rating: '',
-      ageRating: ''
+      mediaType: 'all',
+      country: '',
+      sortBy: 'popularity'
     });
-    onFilterChange({});
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
-    // Logic to sort the movie list
+    setActiveFilters(prev => ({
+      ...prev,
+      sortBy: e.target.value
+    }));
+  };
+
+  const handleFilterChange = (filterName: keyof MovieFilters, value: string) => {
+    if (filterName === 'genres') {
+      // Handle genres differently as it's an array
+      const updatedGenres = [...(activeFilters.genres || [])];
+      if (!updatedGenres.includes(value)) {
+        updatedGenres.push(value);
+      }
+      setActiveFilters(prev => ({
+        ...prev,
+        genres: updatedGenres
+      }));
+    } else {
+      setActiveFilters(prev => ({
+        ...prev,
+        [filterName]: value
+      }));
+    }
+  };
+
+  const removeGenre = (genre: string) => {
+    const updatedGenres = activeFilters.genres?.filter(g => g !== genre) || [];
+    setActiveFilters(prev => ({
+      ...prev,
+      genres: updatedGenres
+    }));
   };
 
   return (
@@ -68,58 +106,92 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
           
           <div className="filter-bar__options">
             <div className="filter-option">
-              <select className="filter-dropdown">
-                <option disabled selected>Release year</option>
-                <option>2025</option>
-                <option>2024</option>
-                <option>2023</option>
-                <option>2022</option>
-                <option>2021</option>
-                <option>2020</option>
+              <select 
+                className="filter-dropdown"
+                value={activeFilters.releaseYear || ''}
+                onChange={(e) => handleFilterChange('releaseYear', e.target.value)}
+              >
+                <option value="" disabled>Release year</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
               </select>
             </div>
             
             <div className="filter-option">
-              <select className="filter-dropdown">
-                <option disabled selected>Genres</option>
-                <option>Action</option>
-                <option>Comedy</option>
-                <option>Drama</option>
-                <option>Horror</option>
-                <option>Sci-Fi</option>
-                <option>Thriller</option>
+              <select 
+                className="filter-dropdown"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) handleFilterChange('genres', e.target.value);
+                }}
+              >
+                <option value="" disabled>Genres</option>
+                <option value="Action">Action</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Drama">Drama</option>
+                <option value="Horror">Horror</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Animation">Animation</option>
+                <option value="Fantasy">Fantasy</option>
+              </select>
+              
+              {/* Display selected genres as tags */}
+              {activeFilters.genres && activeFilters.genres.length > 0 && (
+                <div className="selected-genres">
+                  {activeFilters.genres.map((genre, index) => (
+                    <span key={index} className="genre-tag">
+                      {genre}
+                      <button onClick={() => removeGenre(genre)}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="filter-option">
+              <select 
+                className="filter-dropdown"
+                value={activeFilters.rating || ''}
+                onChange={(e) => handleFilterChange('rating', e.target.value)}
+              >
+                <option value="" disabled>Rating</option>
+                <option value="9+">9+</option>
+                <option value="8+">8+</option>
+                <option value="7+">7+</option>
+                <option value="6+">6+</option>
+                <option value="5+">5+</option>
               </select>
             </div>
             
             <div className="filter-option">
-              <select className="filter-dropdown">
-                <option disabled selected>Price</option>
-                <option>Free</option>
-                <option>Subscription</option>
-                <option>Rent</option>
-                <option>Buy</option>
+              <select 
+                className="filter-dropdown"
+                value={activeFilters.mediaType || 'all'}
+                onChange={(e) => handleFilterChange('mediaType', e.target.value as 'movie' | 'tvshow' | 'all')}
+              >
+                <option value="all">All Media</option>
+                <option value="movie">Movies Only</option>
+                <option value="tvshow">TV Shows Only</option>
               </select>
             </div>
             
             <div className="filter-option">
-              <select className="filter-dropdown">
-                <option disabled selected>Rating</option>
-                <option>9+</option>
-                <option>8+</option>
-                <option>7+</option>
-                <option>6+</option>
-                <option>5+</option>
-              </select>
-            </div>
-            
-            <div className="filter-option">
-              <select className="filter-dropdown">
-                <option disabled selected>Age rating</option>
-                <option>G</option>
-                <option>PG</option>
-                <option>PG-13</option>
-                <option>R</option>
-                <option>NC-17</option>
+              <select 
+                className="filter-dropdown"
+                value={activeFilters.country || ''}
+                onChange={(e) => handleFilterChange('country', e.target.value)}
+              >
+                <option value="" disabled>Country</option>
+                <option value="US">United States</option>
+                <option value="UK">United Kingdom</option>
+                <option value="JP">Japan</option>
+                <option value="KR">Korea</option>
+                <option value="FR">France</option>
               </select>
             </div>
           </div>
@@ -127,7 +199,7 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
       )}
       
       <div className="filter-bar__results">
-        <span className="results-count">0 titles</span>
+        <span className="results-count">{totalResults} titles</span>
       </div>
     </div>
   );

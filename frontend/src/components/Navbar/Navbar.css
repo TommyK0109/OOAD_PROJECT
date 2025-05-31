@@ -1,91 +1,288 @@
 /* src/components/Navbar/Navbar.css */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background-color: #0b0c10;
-    color: white;
-    height: 64px;
-  }
-  
-  .navbar__left {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar__logo img {
-    height: 32px;
-    margin-right: 2rem;
-  }
-  
-  .navbar__links {
-    display: flex;
-    gap: 1.5rem;
-  }
-  
-  .navbar__link {
-    color: #a7a9ac;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  
-  .navbar__link:hover,
-  .navbar__link--active {
-    color: white;
-  }
-  
-  .navbar__search {
-    display: flex;
-    align-items: center;
-    background-color: #1c1d24;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    width: 300px;
-  }
-  
-  .search-icon {
-    color: #6c6d71;
-    margin-right: 0.5rem;
-  }
-  
-  .navbar__search input {
-    background: transparent;
-    border: none;
-    color: white;
-    width: 100%;
-    outline: none;
-    font-size: 0.9rem;
-  }
-  
-  .navbar__search input::placeholder {
-    color: #6c6d71;
-  }
-  
-  .navbar__right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .navbar__signin {
-    background-color: #1c1d24;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  
-  .navbar__menu {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #0b0c10;
+  color: white;
+  height: 64px;
+  box-shadow: 0 0 10px rgba(80, 231, 251, 0.3);
+  border-bottom: 1px solid rgba(80, 231, 251, 0.2);
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Add specific gap between logo and links */
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  min-width: fit-content; /* Ensure logo doesn't shrink */
+}
+
+.navbar__logo img {
+  height: 32px;
+  margin-right: 8px;
+  filter: drop-shadow(0 0 5px rgba(80, 231, 251, 0.7));
+}
+
+.navbar__name {
+  font-size: 1.3rem; /* Slightly reduce font size if needed */
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 0.5rem; /* Add a bit more space after the logo */
+}
+
+.navbar__link {
+  color: #a7a9ac;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: #50e7fb;
+  text-shadow: 0 0 8px rgba(80, 231, 251, 0.8);
+}
+
+.navbar__link:after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #50e7fb, #ff00ff);
+  transition: width 0.3s;
+}
+
+.navbar__link:hover:after,
+.navbar__link--active:after {
+  width: 100%;
+}
+
+.navbar__search {
+  display: flex;
+  align-items: center;
+  background-color: #1c1d24;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  width: 300px;
+  border: 1px solid rgba(255, 0, 255, 0.2);
+  box-shadow: 0 0 5px rgba(255, 0, 255, 0.2);
+  position: relative;
+}
+
+.navbar__search form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon {
+  color: #ff00ff;
+  margin-right: 0.5rem;
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.7);
+}
+
+.navbar__search input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.navbar__search input::placeholder {
+  color: #6c6d71;
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar__join-code-btn {
+  background: linear-gradient(135deg, #50e7fb, #ff00ff);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(80, 231, 251, 0.3);
+}
+
+.navbar__join-code-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(80, 231, 251, 0.4);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.navbar__signin {
+  background-color: #1c1d24;
+  color: #50e7fb;
+  border: 1px solid rgba(80, 231, 251, 0.5);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(80, 231, 251, 0.2);
+  transition: all 0.3s;
+}
+
+.navbar__signin:hover {
+  background-color: rgba(80, 231, 251, 0.1);
+  box-shadow: 0 0 15px rgba(80, 231, 251, 0.4);
+}
+
+.navbar__menu {
+  background: none;
+  border: none;
+  color: #ff00ff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.7);
+  transition: text-shadow 0.3s;
+}
+
+.navbar__menu:hover {
+  text-shadow: 0 0 8px rgba(255, 0, 255, 0.9);
+}
+
+/* User Menu Styles */
+.navbar__user {
+  position: relative;
+}
+
+.navbar__user-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #1c1d24;
+  color: white;
+  border: 1px solid rgba(80, 231, 251, 0.3);
+  border-radius: 20px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.85rem;
+}
+
+.navbar__user-button:hover {
+  background-color: rgba(80, 231, 251, 0.1);
+  box-shadow: 0 0 10px rgba(80, 231, 251, 0.3);
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #50e7fb, #ff00ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.user-name {
+  font-weight: 500;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar__user-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: #1c1d24;
+  border: 1px solid rgba(80, 231, 251, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(80, 231, 251, 0.2);
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.user-menu-header {
+  padding: 1rem;
+  background-color: rgba(80, 231, 251, 0.1);
+  border-bottom: 1px solid rgba(80, 231, 251, 0.2);
+}
+
+.user-email {
+  font-size: 0.8rem;
+  color: #a7a9ac;
+  word-break: break-word;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background-color: rgba(80, 231, 251, 0.2);
+  margin: 0.5rem 0;
+}
+
+.user-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.user-menu-item:hover {
+  background-color: rgba(80, 231, 251, 0.1);
+  color: #50e7fb;
+}
+
+.user-menu-item.logout {
+  color: #ff6b6b;
+}
+
+.user-menu-item.logout:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+}

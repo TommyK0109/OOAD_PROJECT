@@ -8,7 +8,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src/**/*.ts",
-    "test": "jest"
+    "test": "jest",
+    "test-db": "ts-node src/scripts/test-db.ts",
+    "seed-db": "ts-node src/scripts/seed-db.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

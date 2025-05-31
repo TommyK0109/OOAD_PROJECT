@@ -31,6 +31,8 @@
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3),
+                 0 0 20px rgba(255, 255, 255, 0.1);
   }
   
   .movie-detail__original-title {
@@ -68,9 +70,9 @@
   }
   
   .movie-detail__play-btn {
-    background-color: #f8c52c;
-    color: black;
-    border: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #f8c52c; /* Yellow */
+    color: #f8c52c;
     padding: 0.75rem 2rem;
     border-radius: 4px;
     font-size: 1.2rem;
@@ -79,6 +81,63 @@
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 8px rgba(248, 197, 44, 0.7);
+    box-shadow: 0 0 10px rgba(248, 197, 44, 0.4);
+  }
+
+  .movie-detail__play-btn:hover {
+    background-color: rgba(248, 197, 44, 0.15);
+    text-shadow: 0 0 12px rgba(248, 197, 44, 0.9);
+    box-shadow: 
+      0 0 15px rgba(248, 197, 44, 0.6),
+      0 0 30px rgba(248, 197, 44, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .movie-detail__actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .movie-detail__watchlater-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #39ff14; /* Bright green for neon effect */
+    color: #39ff14;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+  }
+
+  .movie-detail__watchlater-btn:hover {
+    background-color: rgba(57, 255, 20, 0.15);
+    text-shadow: 0 0 12px rgba(57, 255, 20, 0.9);
+    box-shadow: 
+      0 0 15px rgba(57, 255, 20, 0.6),
+      0 0 30px rgba(57, 255, 20, 0.3);
+  }
+
+  .movie-detail__watchlater-btn.active {
+    background-color: rgba(57, 255, 20, 0.2);
+    border-color: #39ff14;
+    color: white;
+  }
+
+  .movie-detail__watchlater-btn svg {
+    transition: all 0.3s ease;
+  }
+
+  .movie-detail__watchlater-btn:hover svg {
+    transform: scale(1.1);
   }
   
   .play-icon {
@@ -100,11 +159,29 @@
     font-size: 1rem;
     cursor: pointer;
     white-space: nowrap;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .tab:hover {
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   }
   
   .tab.active {
     color: white;
     border-bottom: 2px solid #f8c52c;
+    text-shadow: 0 0 8px rgba(248, 197, 44, 0.7);
+  }
+
+  .tab.active[data-tab="episodes"] {
+    border-bottom-color: #00c8ff;
+    text-shadow: 0 0 8px rgba(0, 200, 255, 0.7);
+  }
+
+  .tab.active[data-tab="trailers"] {
+    border-bottom-color: #ff00ff;
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.7);
   }
   
   .movie-detail__content {
@@ -156,6 +233,14 @@
     padding: 1rem;
     background-color: #1c1d24;
     border-radius: 4px;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .episode-item:hover {
+    background-color: #252631;
+    border-left: 3px solid #00c8ff;
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.2);
   }
   
   .episode-expand {
@@ -309,4 +394,190 @@
     width: 100%;
     border-radius: 8px;
   }
+
+  .movie-detail__actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
   
+  .movie-detail__party-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .movie-detail__party-btn.create {
+    background-color: #00c8ff;
+    border: none;
+    color: #0b0c10;
+  }
+  
+  .movie-detail__party-btn.join {
+    background-color: transparent;
+    border: 1px solid #00c8ff;
+    color: #00c8ff;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+
+  /* Party options modal */
+  .party-options-modal {
+    background-color: #0b0c10;
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 
+      0 0 20px rgba(0, 200, 255, 0.3),
+      0 0 40px rgba(0, 200, 255, 0.1);
+    border: 1px solid rgba(0, 200, 255, 0.3);
+  }
+
+  .party-options-modal h2 {
+    color: #00c8ff;
+    margin-bottom: 1rem;
+  }
+
+  .party-options-modal p {
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+
+  .party-options-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .party-option-btn {
+    padding: 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+  }
+
+  .party-option-btn.create {
+    background-color: #00c8ff;
+    border: none;
+    color: #0b0c10;
+  }
+
+  .party-option-btn.create:hover {
+    background-color: #00a8e1;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+  }
+
+  .party-option-btn.join {
+    background-color: transparent;
+    border: 1px solid #00c8ff;
+    color: #00c8ff;
+  }
+
+  .party-option-btn.join:hover {
+    background-color: rgba(0, 200, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
+  }
+
+  .party-option-btn.solo {
+    background-color: transparent;
+    border: 1px solid #a7a9ac;
+    color: #a7a9ac;
+  }
+
+  .party-option-btn.solo:hover {
+    background-color: rgba(167, 169, 172, 0.1);
+    color: white;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    color: #a7a9ac;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .close-button:hover {
+    color: white;
+  }
+
+  /* Trailers section with neon effect */
+  .trailers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .trailer-item {
+    cursor: pointer;
+  }
+
+  .trailer-thumbnail {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+  }
+
+  .trailer-thumbnail:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(255, 0, 255, 0.4);
+  }
+
+  .trailer-thumbnail img {
+    width: 100%;
+    display: block;
+  }
+
+  .trailer-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .trailer-thumbnail:hover .trailer-play-btn {
+    background-color: rgba(255, 0, 255, 0.8);
+    box-shadow: 
+      0 0 15px rgba(255, 0, 255, 0.8),
+      0 0 30px rgba(255, 0, 255, 0.4);
+  }
+

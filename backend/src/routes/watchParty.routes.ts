@@ -4,14 +4,20 @@ import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// All watch party routes require authentication
+// Public routes (no auth required)
+router.get('/validate/:inviteCode', watchPartyController.validateInviteCode);
+router.get('/active', watchPartyController.getActiveParties);
+
+// All other routes require authentication
 router.use(authMiddleware);
 
 // Party management
+router.post('/', watchPartyController.createParty);
 router.get('/', watchPartyController.getUserParties);
-router.get('/active', watchPartyController.getActiveParties);
 router.get('/:partyId', watchPartyController.getPartyDetails);
-router.post('/invite/:inviteCode', watchPartyController.joinByInviteCode);
+router.get('/join/:inviteCode', watchPartyController.joinByInviteCode);
+router.post('/:partyId/leave', watchPartyController.leaveParty);
+router.delete('/:partyId', watchPartyController.deleteParty);
 
 // Invitations
 router.post('/:partyId/invite', watchPartyController.sendInvitation);

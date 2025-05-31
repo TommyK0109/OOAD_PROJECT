@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 
 export interface AuthRequest extends Request {
   user?: {
-    userId: number;
+    userId: string;
     username: string;
   };
 }
@@ -46,7 +46,6 @@ export function optionalAuthMiddleware(req: AuthRequest, _res: Response, next: N
 
     return next();
   } catch (error) {
-    // Invalid token, but continue without user
     return next();
   }
 }

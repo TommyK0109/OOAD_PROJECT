@@ -14,37 +14,89 @@ interface WatchlistMovie {
 
 interface MovieDocument extends mongoose.Document {
   title: string;
-  description?: string;
-  duration: number;
-  thumbnailUrl?: string;
+  originalTitle?: string;
+  posterUrl: string;
+  backdropUrl?: string;
+  year?: number;
+  rating?: string;
+  ratingCount?: string;
+  imdbRating?: string;
+  imdbCount?: string;
+  runtime?: string;
+  overview?: string;
+  genres?: string[];
+  country?: string;
+  episodes?: number;
+  streamingServices?: string[];
   viewCount: number;
-  categoryId?: mongoose.Types.ObjectId;
   qualities: MovieQuality[];
 }
 
 export const movieController = {
   async getMovies(req: Request, res: Response, next: NextFunction) {
     try {
-      const { category, search, limit = 20, offset = 0 } = req.query;
+      const { genre, search, year, rating, mediaType, country, sortBy = 'popularity', limit = 20, offset = 0 } = req.query;
       const Movie = mongoose.model('Movie');
-      const Category = mongoose.model('Category');
 
       let query: any = {};
 
-      if (category) {
-        const categoryDoc = await Category.findOne({ name: category });
-        if (categoryDoc) {
-          query.categoryId = categoryDoc._id;
+      // Filter by genre
+      if (genre) {
+        query.genres = { $in: [genre] };
+      }
+
+      // Filter by search term
+      if (search) {
+        query.$or = [
+          { title: { $regex: search, $options: 'i' } },
+          { originalTitle: { $regex: search, $options: 'i' } },
+          { overview: { $regex: search, $options: 'i' } }
+        ];
+      }
+
+      // Filter by year
+      if (year) {
+        query.year = parseInt(year as string);
+      }
+
+      // Filter by rating (assuming it's IMDb rating)
+      if (rating) {
+        const minRating = parseFloat(rating as string);
+        query.imdbRating = { $gte: minRating.toString() };
+      }
+
+      // Filter by media type (movie vs TV show)
+      if (mediaType && mediaType !== 'all') {
+        if (mediaType === 'movie') {
+          query.episodes = { $exists: false };
+        } else if (mediaType === 'tvshow') {
+          query.episodes = { $exists: true };
         }
       }
 
-      if (search) {
-        query.title = { $regex: search, $options: 'i' };
+      // Filter by country
+      if (country) {
+        query.country = { $regex: country, $options: 'i' };
+      }
+
+      // Determine sort order
+      let sortOptions: any = {};
+      switch (sortBy) {
+        case 'alphabetical':
+          sortOptions = { title: 1 };
+          break;
+        case 'releaseDate':
+          sortOptions = { year: -1 };
+          break;
+        case 'rating':
+          sortOptions = { imdbRating: -1 };
+          break;
+        default: // popularity
+          sortOptions = { viewCount: -1 };
       }
 
       const movies = await Movie.find(query)
-        .populate('categoryId', 'name')
-        .sort({ viewCount: -1 })
+        .sort(sortOptions)
         .skip(Number(offset))
         .limit(Number(limit));
 
@@ -65,7 +117,7 @@ export const movieController = {
       const { id } = req.params;
       const Movie = mongoose.model('Movie');
 
-      const movie = await Movie.findById(id).populate('categoryId', 'name');
+      const movie = await Movie.findById(id);
 
       if (!movie) {
         return res.status(404).json({ error: 'Movie not found' });
@@ -131,9 +183,8 @@ export const movieController = {
     try {
       const Movie = mongoose.model('Movie');
       const movies = await Movie.find()
-        .populate('categoryId', 'name')
         .sort({ viewCount: -1 })
-        .limit(10);
+        .limit(20);
 
       return res.json(movies);
     } catch (error) {
@@ -145,9 +196,8 @@ export const movieController = {
     try {
       const Movie = mongoose.model('Movie');
       const movies = await Movie.find()
-        .populate('categoryId', 'name')
-        .sort({ _id: -1 })
-        .limit(10);
+        .sort({ year: -1, createdAt: -1 })
+        .limit(20);
 
       return res.json(movies);
     } catch (error) {
@@ -218,10 +268,7 @@ export const movieController = {
 
       const Watchlist = mongoose.model('Watchlist');
       const watchlist = await Watchlist.findOne({ userId: req.user.userId })
-        .populate({
-          path: 'movies.movieId',
-          populate: { path: 'categoryId', select: 'name' }
-        });
+        .populate('movies.movieId');
 
       if (!watchlist) {
         return res.json([]);
@@ -246,14 +293,81 @@ export const movieController = {
 
       const WatchHistory = mongoose.model('WatchHistory');
       const history = await WatchHistory.find({ userId: req.user.userId })
-        .populate({
-          path: 'movieId',
-          populate: { path: 'categoryId', select: 'name' }
-        })
+        .populate('movieId')
         .sort({ watchedAt: -1 })
         .limit(50);
 
       return res.json(history);
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  // New method to get filtered movies matching frontend expectations
+  async getFilteredMovies(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { 
+        releaseYear, 
+        genres, 
+        rating, 
+        mediaType, 
+        country, 
+        sortBy = 'popularity' 
+      } = req.query;
+      
+      const Movie = mongoose.model('Movie');
+      let query: any = {};
+
+      // Filter by release year
+      if (releaseYear) {
+        query.year = parseInt(releaseYear as string);
+      }
+
+      // Filter by genres (array of strings)
+      if (genres) {
+        const genreArray = Array.isArray(genres) ? genres : [genres];
+        query.genres = { $in: genreArray };
+      }
+
+      // Filter by rating (minimum IMDb rating)
+      if (rating) {
+        const minRating = parseFloat(rating as string);
+        query.imdbRating = { $gte: minRating.toString() };
+      }
+
+      // Filter by media type
+      if (mediaType && mediaType !== 'all') {
+        if (mediaType === 'movie') {
+          query.episodes = { $exists: false };
+        } else if (mediaType === 'tvshow') {
+          query.episodes = { $exists: true };
+        }
+      }
+
+      // Filter by country
+      if (country) {
+        query.country = { $regex: country, $options: 'i' };
+      }
+
+      // Determine sort order
+      let sortOptions: any = {};
+      switch (sortBy) {
+        case 'alphabetical':
+          sortOptions = { title: 1 };
+          break;
+        case 'releaseDate':
+          sortOptions = { year: -1 };
+          break;
+        case 'rating':
+          sortOptions = { imdbRating: -1 };
+          break;
+        default: // popularity
+          sortOptions = { viewCount: -1 };
+      }
+
+      const movies = await Movie.find(query).sort(sortOptions);
+      
+      return res.json(movies);
     } catch (error) {
       return next(error);
     }

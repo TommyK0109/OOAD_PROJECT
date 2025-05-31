@@ -1,0 +1,489 @@
+/* Invitation Modal Styles */
+.invitation-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.invitation-modal {
+    background-color: #36393f;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.invitation-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #202225;
+}
+
+.invitation-modal-header h3 {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #b9bbbe;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Tabs */
+.invitation-modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #202225;
+    background-color: #2f3136;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: #b9bbbe;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #dcddde;
+}
+
+.tab-btn.active {
+    color: white;
+    border-bottom-color: #5865f2;
+    background-color: rgba(88, 101, 242, 0.1);
+}
+
+/* Modal Content */
+.invitation-modal-content {
+    padding: 24px;
+}
+
+/* Messages */
+.error-message {
+    background-color: #ed4245;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.success-message {
+    background-color: #3ba55c;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+/* Share Link Section */
+.share-link-section p {
+    color: #b9bbbe;
+    margin: 0 0 16px 0;
+    font-size: 14px;
+}
+
+.invite-link-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.invite-link-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    background-color: #2f3136;
+    color: white;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+}
+
+.invite-link-input:focus {
+    outline: none;
+    border-color: #5865f2;
+}
+
+.copy-btn {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #5865f2;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    background-color: #4752c4;
+}
+
+.invite-code-section {
+    text-align: center;
+    padding: 16px;
+    background-color: rgba(88, 101, 242, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(88, 101, 242, 0.2);
+}
+
+.invite-code-section p {
+    color: #dcddde;
+    margin: 0;
+}
+
+.invite-code-section strong {
+    color: #5865f2;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+/* User Search Section */
+.invite-users-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    background-color: #2f3136;
+    color: white;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #5865f2;
+}
+
+.search-input::placeholder {
+    color: #72767d;
+}
+
+/* Selected Users */
+.selected-users h4 {
+    color: white;
+    font-size: 16px;
+    margin: 0 0 12px 0;
+}
+
+.selected-users-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.selected-user-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: #5865f2;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+}
+
+.user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.remove-user-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.remove-user-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Email Invites Section */
+.email-invites-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.email-invites-section h4 {
+    color: white;
+    font-size: 16px;
+    margin: 0;
+}
+
+.email-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.email-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.email-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    background-color: #2f3136;
+    color: white;
+    font-size: 14px;
+}
+
+.email-input:focus {
+    outline: none;
+    border-color: #5865f2;
+}
+
+.email-input::placeholder {
+    color: #72767d;
+}
+
+.remove-email-btn {
+    background: #ed4245;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.remove-email-btn:hover {
+    background-color: #c73538;
+}
+
+.add-email-btn {
+    padding: 10px 16px;
+    border: 1px dashed #5865f2;
+    border-radius: 4px;
+    background: transparent;
+    color: #5865f2;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+}
+
+.add-email-btn:hover {
+    background-color: rgba(88, 101, 242, 0.1);
+    border-color: #4752c4;
+}
+
+/* Message Section */
+.message-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message-section label {
+    color: #b9bbbe;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.message-section textarea {
+    padding: 12px;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    background-color: #2f3136;
+    color: white;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.message-section textarea:focus {
+    outline: none;
+    border-color: #5865f2;
+}
+
+.message-section textarea::placeholder {
+    color: #72767d;
+}
+
+.message-section small {
+    color: #72767d;
+    font-size: 12px;
+    text-align: right;
+}
+
+/* Send Button */
+.send-invites-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    background-color: #5865f2;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: flex-start;
+}
+
+.send-invites-btn:hover:not(:disabled) {
+    background-color: #4752c4;
+}
+
+.send-invites-btn:disabled {
+    background-color: #4f545c;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .invitation-modal-overlay {
+        padding: 10px;
+    }
+
+    .invitation-modal {
+        max-width: 100%;
+        max-height: 95vh;
+    }
+
+    .invitation-modal-header {
+        padding: 16px 20px;
+    }
+
+    .invitation-modal-content {
+        padding: 20px;
+    }
+
+    .invitation-modal-tabs {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        border-bottom: 1px solid #202225;
+        border-right: none;
+    }
+
+    .tab-btn.active {
+        border-bottom-color: #5865f2;
+        border-left: 3px solid #5865f2;
+    }
+
+    .invite-link-container {
+        flex-direction: column;
+    }
+
+    .selected-users-list {
+        flex-direction: column;
+    }
+
+    .selected-user-item {
+        justify-content: space-between;
+    }
+
+    .email-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .remove-email-btn {
+        align-self: flex-end;
+        width: fit-content;
+    }
+}
+
+/* Dark theme scrollbar */
+.invitation-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.invitation-modal::-webkit-scrollbar-track {
+    background: #2f3136;
+}
+
+.invitation-modal::-webkit-scrollbar-thumb {
+    background-color: #202225;
+    border-radius: 4px;
+}
+
+.invitation-modal::-webkit-scrollbar-thumb:hover {
+    background-color: #36393f;
+}

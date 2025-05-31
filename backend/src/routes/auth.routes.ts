@@ -16,7 +16,7 @@ router.post('/register', [
 
 // Login
 router.post('/login', [
-  body('username').notEmpty().withMessage('Username is required'),
+  body('email').isEmail().withMessage('Invalid email'),
   body('password').notEmpty().withMessage('Password is required'),
   validationMiddleware
 ], authController.login);
@@ -24,11 +24,21 @@ router.post('/login', [
 // Logout
 router.post('/logout', authMiddleware, authController.logout);
 
+// Get profile
+router.get('/profile', authMiddleware, authController.getProfile);
+
 // Update profile
 router.patch('/profile', authMiddleware, [
   body('username').optional().isLength({ min: 3 }),
   body('email').optional().isEmail(),
   validationMiddleware
 ], authController.updateProfile);
+
+// Change password
+router.post('/change-password', authMiddleware, [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+  validationMiddleware
+], authController.changePassword);
 
 export default router;

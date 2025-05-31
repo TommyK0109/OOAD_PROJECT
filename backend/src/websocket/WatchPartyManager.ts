@@ -10,8 +10,8 @@ import { syncHandler } from './handlers/sync.handler';
 export class WatchPartyManager {
   private static instance: WatchPartyManager;
   private wss!: WebSocketServer;
-  private parties: Map<number, PartyRoom> = new Map();
-  private userConnections: Map<number, AuthenticatedWebSocket> = new Map();
+  private parties: Map<string, PartyRoom> = new Map();
+  private userConnections: Map<string, AuthenticatedWebSocket> = new Map();
 
   private constructor() { }
 
@@ -58,11 +58,21 @@ export class WatchPartyManager {
   }
 
   private async handleMessage(ws: AuthenticatedWebSocket, message: WebSocketMessage) {
+    // Handle authentication
     if (message.type === WebSocketMessageType.AUTH) {
       await this.handleAuth(ws, message.payload);
       return;
     }
+
+    // Handle heartbeat (PING) - allow without authentication
+    if (message.type === WebSocketMessageType.PING) {
+      ws.send(JSON.stringify({ type: WebSocketMessageType.PONG }));
+      return;
+    }
+
+    // All other messages require authentication
     if (!ws.isAuthenticated) {
+      logger.debug(`Unauthenticated ${message.type} message from ${ws.userId || 'unknown'}: Not authenticated`);
       this.sendError(ws, 'Not authenticated');
       return;
     }
@@ -91,19 +101,17 @@ export class WatchPartyManager {
         await chatHandler(this, ws, message);
         break;
 
-      // Heartbeat
-      case WebSocketMessageType.PING:
-        ws.send(JSON.stringify({ type: WebSocketMessageType.PONG }));
-        break;
-
       default:
         this.sendError(ws, 'Unknown message type');
     }
   }
 
   private async handleAuth(ws: AuthenticatedWebSocket, payload: { token: string }) {
+    console.log('🔐 Received WebSocket AUTH request with token:', payload.token?.substring(0, 20) + '...');
     try {
       const decoded = verifyToken(payload.token);
+      console.log('✅ Token verified successfully:', { userId: decoded.userId, username: decoded.username });
+      
       ws.userId = decoded.userId;
       ws.username = decoded.username;
       ws.isAuthenticated = true;
@@ -111,17 +119,24 @@ export class WatchPartyManager {
       // Store connection
       this.userConnections.set(decoded.userId, ws);
 
-      ws.send(JSON.stringify({
+      const successResponse = {
         type: WebSocketMessageType.AUTH_SUCCESS,
         payload: { userId: decoded.userId, username: decoded.username }
-      }));
+      };
+      
+      console.log('📤 Sending AUTH_SUCCESS response:', successResponse);
+      ws.send(JSON.stringify(successResponse));
 
       logger.info(`User ${decoded.username} authenticated via WebSocket`);
     } catch (error) {
-      ws.send(JSON.stringify({
+      console.log('❌ Token verification failed:', error);
+      const errorResponse = {
         type: WebSocketMessageType.AUTH_ERROR,
         payload: { message: 'Invalid token' }
-      }));
+      };
+      
+      console.log('📤 Sending AUTH_ERROR response:', errorResponse);
+      ws.send(JSON.stringify(errorResponse));
       ws.close();
     }
   }
@@ -150,8 +165,8 @@ export class WatchPartyManager {
   }
 
   // Public methods for handlers
-  public createParty(hostWs: AuthenticatedWebSocket, roomName: string, movieId: number, partyId?: number): PartyRoom {
-    const id = partyId ?? Date.now(); // Use provided ID or generate one
+  public createParty(hostWs: AuthenticatedWebSocket, roomName: string, movieId: string, partyId?: string): PartyRoom {
+    const id = partyId ?? Date.now().toString(); // Use provided ID or generate one
     const party = new PartyRoom(id, roomName, hostWs.userId!, movieId);
 
     this.parties.set(id, party);
@@ -160,22 +175,36 @@ export class WatchPartyManager {
     return party;
   }
 
-  public getParty(partyId: number): PartyRoom | undefined {
+  public getParty(partyId: string): PartyRoom | undefined {
     return this.parties.get(partyId);
   }
 
-  public deleteParty(partyId: number) {
+  public deleteParty(partyId: string) {
     this.parties.delete(partyId);
   }
 
-  public getUserConnection(userId: number): AuthenticatedWebSocket | undefined {
+  public getUserConnection(userId: string): AuthenticatedWebSocket | undefined {
     return this.userConnections.get(userId);
   }
 
-  public sendToUser(userId: number, message: WebSocketMessage) {
+  public sendToUser(userId: string, message: WebSocketMessage) {
     const ws = this.userConnections.get(userId);
     if (ws && ws.readyState === ws.OPEN) {
       ws.send(JSON.stringify(message));
+    }
+  }
+
+  public broadcastToParty(partyId: string, message: WebSocketMessage) {
+    const party = this.parties.get(partyId);
+    if (party) {
+      // Get all users in the party and send them the message
+      const users = party.getUsers();
+      users.forEach(user => {
+        const ws = this.userConnections.get(user.userId);
+        if (ws && ws.readyState === ws.OPEN) {
+          ws.send(JSON.stringify(message));
+        }
+      });
     }
   }
 

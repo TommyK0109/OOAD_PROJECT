@@ -8,6 +8,7 @@ const router = Router();
 router.get('/', optionalAuthMiddleware, movieController.getMovies);
 router.get('/popular', movieController.getPopularMovies);
 router.get('/new', movieController.getNewReleases);
+router.get('/filtered', movieController.getFilteredMovies);
 router.get('/categories', movieController.getCategories);
 router.get('/:id', optionalAuthMiddleware, movieController.getMovieById);
 

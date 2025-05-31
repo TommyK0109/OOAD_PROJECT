@@ -1,67 +1,100 @@
 import { Movie } from '../types/movie';
+import { MovieFilters } from '../types/filters';
 
-// Mock data for development
-const mockMovies: Movie[] = [
-  {
-    id: '1',
-    title: 'Angles and Demons',
-    posterUrl: 'https://images.justwatch.com/poster/244160758/s166/angels-and-demons.avif', // Replace with actual URLs or import local images
-    year: 2009,
-    rating: 'R18+',
-    genres: ['Action', 'Thriller']
-  },
-  {
-    id: '2',
-    title: 'Minecraft Movie',
-    posterUrl: 'https://images.justwatch.com/poster/328203307/s166/a-minecraft-movie.avif',
-    year: 2025,
-    rating: 'PG',
-    genres: ['Fantasy', 'Comedy', 'Animation']
-  },
-  {
-    id: '3',
-    title: 'Family Guy',
-    posterUrl: 'https://images.justwatch.com/poster/242592844/s166/family-guy.avif',
-    year: 1999,
-    rating: 'TV-MA',
-    genres: ['Animation', 'Comedy']
-  },
-  {
-    id: '4',
-    title: 'Solo Leveling',
-    originalTitle: '俺だけレベルアップな件 ',
-    posterUrl: 'https://images.justwatch.com/poster/310154566/s166/solo-leveling.avif', // Replace with actual URLs
-    backdropUrl: 'https://images.justwatch.com/poster/321046122/s332/season-2.avif',
-    year: 2024,
-    rating: '78%',
-    ratingCount: '(79)',
-    imdbRating: '7.0',
-    imdbCount: '(1k)',
-    runtime: '23min',
-    overview: 'The story follows a skilled warrior who can parry any attack, making him virtually invincible in battle. After defeating the demon king, he seeks a peaceful life as an adventurer but finds that his reputation and abilities continue to draw him into conflict.',
-    genres: ['Action & Adventure', 'Fantasy', 'Animation', 'Japanese Anime'],
-    country: 'South Japan',
-    episodes: 12,
-    streamingServices: ['Netflix']
-  },
-  // Add more mock movies to fill your grid
-  // You can see in the image there are multiple rows of movies
-  // Add at least 12-18 entries to get a full page
-];
+// Backend API configuration
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8081/api';
+
+// Helper function to handle API responses
+const handleApiResponse = async (response: Response) => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+// Helper function to convert backend movie to frontend format
+const formatMovie = (backendMovie: any): Movie => {
+  return {
+    id: backendMovie._id,
+    title: backendMovie.title,
+    originalTitle: backendMovie.originalTitle,
+    posterUrl: backendMovie.posterUrl,
+    backdropUrl: backendMovie.backdropUrl,
+    year: backendMovie.year,
+    rating: backendMovie.rating,
+    ratingCount: backendMovie.ratingCount,
+    imdbRating: backendMovie.imdbRating,
+    imdbCount: backendMovie.imdbCount,
+    runtime: backendMovie.runtime,
+    overview: backendMovie.overview,
+    genres: backendMovie.genres,
+    country: backendMovie.country,
+    episodes: backendMovie.episodes,
+    streamingServices: backendMovie.streamingServices
+  };
+};
 
 export const getPopularMovies = async (): Promise<Movie[]> => {
-  // This would be an API call in production
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(mockMovies), 500);
-  });
+  try {
+    const response = await fetch(`${API_BASE}/movies/popular`);
+    const movies = await handleApiResponse(response);
+    return movies.map(formatMovie);
+  } catch (error) {
+    console.error('Failed to fetch popular movies:', error);
+    throw error;
+  }
 };
 
 export const getMovieById = async (id: string): Promise<Movie | undefined> => {
-  // This would be an API call for a specific movie in production
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const movie = mockMovies.find(movie => movie.id === id);
-      resolve(movie);
-    }, 500);
-  });
+  try {
+    const response = await fetch(`${API_BASE}/movies/${id}`);
+    if (response.status === 404) {
+      return undefined;
+    }
+    const movie = await handleApiResponse(response);
+    return formatMovie(movie);
+  } catch (error) {
+    console.error('Failed to fetch movie by ID:', error);
+    return undefined;
+  }
+};
+
+export const getFilteredMovies = async (filters: MovieFilters): Promise<Movie[]> => {
+  try {
+    // Build query parameters
+    const params = new URLSearchParams();
+
+    if (filters.releaseYear) {
+      params.append('year', filters.releaseYear);
+    }
+
+    if (filters.genres && filters.genres.length > 0) {
+      filters.genres.forEach(genre => {
+        params.append('genres', genre);
+      });
+    }
+
+    if (filters.rating) {
+      params.append('rating', filters.rating);
+    }
+
+    if (filters.mediaType && filters.mediaType !== 'all') {
+      params.append('mediaType', filters.mediaType);
+    }
+
+    if (filters.country) {
+      params.append('country', filters.country);
+    }
+
+    if (filters.sortBy) {
+      params.append('sortBy', filters.sortBy);
+    }
+
+    const response = await fetch(`${API_BASE}/movies/filtered?${params.toString()}`);
+    const movies = await handleApiResponse(response);
+    return movies.map(formatMovie);
+  } catch (error) {
+    console.error('Failed to fetch filtered movies:', error);
+    throw error;
+  }
 };

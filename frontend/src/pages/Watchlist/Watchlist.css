@@ -1,0 +1,118 @@
+.watchlist {
+  padding: 2rem;
+  background-color: #0b0c10;
+  min-height: calc(100vh - 64px);
+  color: white;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 0 10px rgba(66, 220, 255, 0.3);
+}
+
+.watchlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.watchlist-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.watchlist-count {
+  font-size: 1rem;
+  color: #a7a9ac;
+}
+
+.watchlist-sort {
+  background-color: #1c1d24;
+  border: 1px solid rgba(255, 0, 255, 0.3);
+  border-radius: 4px;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff00ff' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 5px rgba(255, 0, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.watchlist-sort:hover {
+  box-shadow: 0 0 8px rgba(255, 0, 255, 0.4);
+}
+
+.watchlist-sort:focus {
+  outline: none;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.6);
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-watchlist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #a7a9ac;
+  text-align: center;
+}
+
+.empty-watchlist__icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+  color: #ff00ff;
+  animation: pulse 2s infinite alternate;
+}
+
+.empty-watchlist__icon svg {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.6));
+}
+
+.empty-watchlist h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.empty-watchlist p {
+  max-width: 400px;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.8;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.8));
+  }
+}
+
+@media (max-width: 768px) {
+  .watchlist-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

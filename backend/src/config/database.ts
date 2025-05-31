@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { logger } from '../utils/logger';
+import { seedMovies, seedCategoriesForCompatibility } from '../seeds/movies.seed';
 
 export async function initializeDatabase() {
     try {
@@ -47,18 +48,30 @@ async function createSchemas() {
             updatedAt: { type: Date, default: Date.now }
         });
 
-        // Movie Schema
+        // Movie Schema - Updated to match frontend Movie interface
         const movieSchema = new mongoose.Schema({
             title: { type: String, required: true },
-            description: String,
-            duration: { type: Number, required: true },
-            thumbnailUrl: String,
+            originalTitle: String,
+            posterUrl: { type: String, required: true },
+            backdropUrl: String,
+            year: Number,
+            rating: String, // "78%", "R18+"
+            ratingCount: String, // "(79)"
+            imdbRating: String, // "7.0"
+            imdbCount: String, // "(1k)"
+            runtime: String, // "23min"
+            overview: String, // Changed from 'description'
+            genres: [String], // Changed from categoryId to array of strings
+            country: String,
+            episodes: Number,
+            streamingServices: [String],
             viewCount: { type: Number, default: 0 },
-            categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
             qualities: [{
-                resolution: { type: String, required: true },
-                streamUrl: { type: String, required: true }
-            }]
+                resolution: String,
+                streamUrl: String
+            }],
+            createdAt: { type: Date, default: Date.now },
+            updatedAt: { type: Date, default: Date.now }
         });
 
         // WatchParty Schema
@@ -128,6 +141,15 @@ async function createSchemas() {
         mongoose.model('WatchHistory', watchHistorySchema);
 
         logger.info('All schemas created successfully');
+        
+        // Run seeds if SEED_DB is true
+        if (process.env.SEED_DB === 'true') {
+            logger.info('SEED_DB is true, running database seeds...');
+            await seedCategoriesForCompatibility();
+            await seedMovies();
+            logger.info('Database seeding completed successfully');
+        }
+        
     } catch (error) {
         logger.error('Error creating schemas:', error);
         throw error;
