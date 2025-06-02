@@ -8,13 +8,12 @@ import WatchPage from './pages/Watch/WatchPage';
 import WatchlistPage from './pages/Watchlist/Watchlist';
 import Footer from './components/Footer/Footer';
 import JoinByCodePage from './pages/JoinByCode';
-import AuthDebug from './components/AuthDebug';
+
 
 import { WebSocketProvider } from './context/WebSocketContext';
 import { WatchlistProvider } from './context/WatchlistContext';
 import { AuthProvider } from './context/AuthContext';
 
-// Create a wrapper component that handles the conditional rendering
 const AppContent = () => {
     const location = useLocation();
     const isHomePage = location.pathname === '/' || location.pathname === '/popular';
@@ -23,7 +22,6 @@ const AppContent = () => {
 
     return (
         <div className="app">
-            <AuthDebug />
             <Navbar />
             <div className="main-content">
                 <Routes>
