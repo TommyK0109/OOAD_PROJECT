@@ -82,6 +82,215 @@ const movieData = [
       { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=QTxvzkwVsQE' },
       { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=QTxvzkwVsQE' }
     ]
+  },
+  {
+    id: '5', 
+    title: 'MobLand',
+    posterUrl: 'https://images.justwatch.com/poster/326902644/s166/mobland.avif',
+    year: 2025,
+    rating: 'TV-MA',
+    genres: ['Drama', 'Crime'],
+    overview: 'Movie description goes here...',
+    runtime: '120min',
+    country: 'United States',
+    imdbRating: '8.5',
+    imdbCount: '(28k)',
+    ratingCount: '(500)',
+    streamingServices: ['Netflix'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://example.com/video-720p.mp4' },
+      { resolution: '1080p', streamUrl: 'https://example.com/video-1080p.mp4' }
+    ]
+  },
+  {
+    id: '6',
+    title: 'The Flash',
+    posterUrl: 'https://images.justwatch.com/poster/304477580/s166/the-flash.avif',
+    year: 2023,
+    rating: 'TV-14',
+    genres: ['Action', 'Adventure', 'Drama'],
+    overview: 'Barry Allen, a forensic scientist with a knack for solving crimes, gains super-speed powers after a particle accelerator explosion. He uses his abilities to fight crime and protect Central City as The Flash.',
+    runtime: '42min',
+    country: 'United States',
+    imdbRating: '7.6',
+    imdbCount: '(500k)',
+    ratingCount: '(20k)',
+    streamingServices: ['Netflix', 'Amazon Prime'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '7',
+    title: 'Mission: Impossible - Dead Reckoning Part One',
+    posterUrl: 'https://images.justwatch.com/poster/305409535/s166/mission-impossible-7.avif',
+    year: 2023,
+    rating: 'TV-14',
+    genres: ['Action', 'Adventure', 'Drama'],
+    overview: 'Barry Allen, a forensic scientist with a knack for solving crimes, gains super-speed powers after a particle accelerator explosion. He uses his abilities to fight crime and protect Central City as The Flash.',
+    runtime: '42min',
+    country: 'United States',
+    imdbRating: '7.6',
+    imdbCount: '(500k)',
+    ratingCount: '(20k)',
+    streamingServices: ['Netflix', 'Amazon Prime'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '8',
+    title: 'The Marvels',
+    posterUrl: 'https://images.justwatch.com/poster/244761547/s166/captain-marvel-2.avif',
+    year: 2023,
+    rating: 'PG-13',
+    genres: ['Action', 'Adventure', 'Fantasy'],
+    overview: 'Carol Danvers, Kamala Khan, and Monica Rambeau team up to face a cosmic threat that could destroy the universe.',
+    runtime: '105min',
+    country: 'United States',
+    imdbRating: '6.5',
+    imdbCount: '(200k)',
+    ratingCount: '(10k)',
+    streamingServices: ['Disney+'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '9',
+    title: 'Dead Silence',
+    posterUrl: 'https://images.justwatch.com/poster/305169754/s166/dead-silence.avif',
+    year: 2023,
+    rating: 'R',
+    genres: ['Horror', 'Mystery', 'Thriller'],
+    overview: 'A young couple discovers a sinister secret about their new home and must confront the malevolent force that lurks within.',
+    runtime: '90min',
+    country: 'United States',
+    imdbRating: '5.8',
+    imdbCount: '(50k)',
+    ratingCount: '(5k)',
+    streamingServices: ['HBO Max'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '10',
+    title: 'Detective Conan',
+    posterUrl: 'https://images.justwatch.com/poster/255380311/s166/detective-conan.avif',
+    year: 2023,
+    rating: 'PG',
+    genres: ['Animation', 'Mystery', 'Adventure'],
+    overview: 'A young detective is transformed into a child after being poisoned, but continues to solve crimes with the help of his friends.',
+    runtime: '24min',
+    country: 'Japan',
+    imdbRating: '8.6',
+    imdbCount: '(100k)',
+    ratingCount: '(20k)',
+    streamingServices: ['Crunchyroll'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '11',
+    title: 'Final Destination 5',
+    posterUrl: 'https://images.justwatch.com/poster/123473714/s166/final-destination-5.avif',
+    year: 2011,
+    rating: 'R',
+    genres: ['Horror', 'Thriller'],
+    overview: 'A group of people escape a deadly bridge collapse, only to find that Death is still after them.',
+    runtime: '92min',
+    country: 'United States',
+    imdbRating: '5.9',
+    imdbCount: '(100k)',
+    ratingCount: '(10k)',
+    streamingServices: ['HBO Max'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '12',
+    title: 'Game of Thrones',
+    posterUrl: 'https://images.justwatch.com/poster/297859466/s166/game-of-thrones.avif',
+    year: 2011,
+    rating: 'TV-MA',
+    genres: ['Drama', 'Fantasy', 'Adventure'],
+    overview: 'Nine noble families fight for control over the mythical land of Westeros, while an ancient enemy returns after being dormant for millennia.',
+    runtime: '57min',
+    country: 'United States',
+    imdbRating: '9.3',
+    imdbCount: '(2M)',
+    ratingCount: '(500k)',
+    streamingServices: ['HBO Max'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '13',
+    title: 'Arcane',
+    posterUrl: 'https://images.justwatch.com/poster/255388636/s166/arcane.avif',
+    year: 2021,
+    rating: 'TV-14',
+    genres: ['Animation', 'Action', 'Adventure'],
+    overview: 'Set in the universe of League of Legends, Arcane explores the origins of iconic characters and the delicate balance between the rich city of Piltover and the oppressed underground of Zaun.',
+    runtime: '40min',
+    country: 'United States',
+    imdbRating: '9.4',
+    imdbCount: '(200k)',
+    ratingCount: '(50k)',
+    streamingServices: ['Netflix'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '14',
+    title: 'The Boys',
+    posterUrl: 'https://images.justwatch.com/poster/203606186/s166/the-boys.avif',
+    year: 2019,
+    rating: 'TV-MA',
+    genres: ['Action', 'Comedy', 'Drama'],
+    overview: 'In a world where superheroes abuse their powers, a group of vigilantes known as "The Boys" set out to take them down.',
+    runtime: '60min',
+    country: 'United States',
+    imdbRating: '8.7',
+    imdbCount: '(500k)',
+    ratingCount: '(100k)',
+    streamingServices: ['Amazon Prime Video'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
+  },
+  {
+    id: '15',
+    title: 'Doctor Who',
+    posterUrl: 'https://images.justwatch.com/poster/328945946/s166/doctor-who-2023.avif',
+    year: 2023,
+    rating: 'TV-PG',
+    genres: ['Adventure', 'Drama', 'Sci-Fi'],
+    overview: 'The Doctor, a Time Lord from the planet Gallifrey, travels through time and space in the TARDIS, a time machine that looks like a British police box.',
+    runtime: '50min',
+    country: 'United Kingdom',
+    imdbRating: '8.6',
+    imdbCount: '(300k)',
+    ratingCount: '(50k)',
+    streamingServices: ['BBC iPlayer'],
+    qualities: [
+      { resolution: '720p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' },
+      { resolution: '1080p', streamUrl: 'https://www.youtube.com/watch?v=UWMzKXsY9A4' }
+    ]
   }
 ];
 
