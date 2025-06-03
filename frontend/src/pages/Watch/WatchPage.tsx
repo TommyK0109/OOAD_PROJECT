@@ -603,125 +603,146 @@ const WatchPage = () => {
 
       {/* Sidebar (Party Mode Only) */}
       {!isSoloMode && (
-        <div className={`sidebar ${isChatOpen ? '' : 'closed'}`}>
-          <div className="sidebar-header">
-            <h2>{partyData?.roomName || 'Watch Party'}</h2>
-            <button className="toggle-chat" onClick={toggleChat}>
-              {isChatOpen ? '✕' : '💬'}
-            </button>
-          </div>
-
-          <div className="sidebar-content">
-            {/* Room Code Display */}
-            {partyData && (
-              <div className="room-code-section" style={{
-                padding: '15px',
-                borderBottom: '1px solid #202225',
-                backgroundColor: '#36393f',
-                textAlign: 'center'
-              }}>
-                <div style={{ color: '#b9bbbe', fontSize: '12px', marginBottom: '5px' }}>Room Code</div>
-                <div style={{
-                  color: '#ffffff',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  letterSpacing: '2px',
-                  fontFamily: 'monospace',
-                  backgroundColor: '#2f3136',
-                  padding: '8px 12px',
-                  borderRadius: '4px',
-                  border: '1px solid #202225'
-                }}>
-                  {partyData.inviteCode}
-                </div>
-                <div style={{ color: '#72767d', fontSize: '11px', marginTop: '5px' }}>Share this code with friends</div>
-              </div>
-            )}
-
-            {/* Connection Status */}
-            <div className="connection-status" style={{
-              padding: '10px 15px',
-              borderBottom: '1px solid #202225',
-              backgroundColor: isConnected && isAuthenticated ? '#2d7d32' : '#d32f2f',
-              color: 'white',
-              textAlign: 'center',
-              fontSize: '12px'
-            }}>
-              {isConnected && isAuthenticated ?
-                '🟢 Connected & Synced' :
-                !isConnected ? '🔴 Connecting...' : '🟡 Authenticating...'
-              }
-            </div>
-
-            {/* Party Controls */}
-            <div className="party-controls">
-              {isCurrentUserHost ? (
-                <>
-                  <button
-                    className="control-btn invite-btn"
-                    onClick={handleInvite}
-                    style={{
-                      backgroundColor: '#5865f2',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '12px',
-                      fontSize: '14px',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <span className="btn-icon">📤</span>
-                    Invite Friends
-                  </button>
-                  <button className="control-btn delete-btn" onClick={handleDeleteRoom}>
-                    <span className="btn-icon">🗑</span>
-                    Delete Room
-                  </button>
-                </>
-              ) : (
-                <button className="control-btn leave-btn" onClick={handleLeaveRoom}>
-                  <span className="btn-icon">🚪</span>
-                  Leave Room
-                </button>
+        <>
+          {/* Floating Chat Bubble (appears when chat is closed) */}
+          {!isChatOpen && (
+            <div 
+              className="chat-bubble" 
+              onClick={toggleChat}
+              title="Open chat"
+            >
+              <span role="img" aria-label="Chat">💬</span>
+              {participants.length > 0 && (
+                <span className="bubble-counter">{participants.length}</span>
               )}
             </div>
+          )}
+          
+          {/* Full Chat Panel */}
+          <div className={`sidebar ${isChatOpen ? 'open' : 'closed'}`}>
+            <div className="sidebar-header">
+              <h2>{partyData?.roomName || 'Watch Party'}</h2>
+              <button 
+                className="close-chat" 
+                onClick={toggleChat}
+                title="Close chat"
+              >
+                ✕
+              </button>
+            </div>
 
-            {/* Participants Section */}
-            <div className="participants-section">
-              <h3>Participants ({participants.length})</h3>
-              <div className="participants-list">
-                {participants.map((participant, index) => (
-                  <div key={`${participant.userId}-${index}`} className="participant-item">
-                    <div className="participant-avatar">
-                      <img
-                        src={participant.avatarUrl}
-                        alt={participant.username}
-                        className="avatar-image"
-                      />
-                      <div className={`status-indicator ${participant.isActive ? 'online' : 'offline'}`}></div>
-                    </div>
-                    <div className="participant-info">
-                      <div className="participant-name">
-                        {participant.username}
-                        {participant.isHost && <span className="host-badge">Host</span>}
+            <div className="sidebar-content">
+              {/* Room Code Display */}
+              {partyData && (
+                <div className="room-code-section" style={{
+                  padding: '15px',
+                  borderBottom: '1px solid #202225',
+                  backgroundColor: '#36393f',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ color: '#b9bbbe', fontSize: '12px', marginBottom: '5px' }}>Room Code</div>
+                  <div style={{
+                    color: '#ffffff',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    letterSpacing: '2px',
+                    fontFamily: 'monospace',
+                    backgroundColor: '#2f3136',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    border: '1px solid #202225'
+                  }}>
+                    {partyData.inviteCode}
+                  </div>
+                  <div style={{ color: '#72767d', fontSize: '11px', marginTop: '5px' }}>Share this code with friends</div>
+                </div>
+              )}
+
+              {/* Connection Status */}
+              <div className="connection-status" style={{
+                padding: '10px 15px',
+                borderBottom: '1px solid #202225',
+                backgroundColor: isConnected && isAuthenticated ? '#2d7d32' : '#d32f2f',
+                color: 'white',
+                textAlign: 'center',
+                fontSize: '12px'
+              }}>
+                {isConnected && isAuthenticated ?
+                  '🟢 Connected & Synced' :
+                  !isConnected ? '🔴 Connecting...' : '🟡 Authenticating...'
+                }
+              </div>
+
+              {/* Party Controls */}
+              <div className="party-controls">
+                {isCurrentUserHost ? (
+                  <>
+                    <button
+                      className="control-btn invite-btn"
+                      onClick={handleInvite}
+                      style={{
+                        backgroundColor: '#5865f2',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '12px',
+                        fontSize: '14px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <span className="btn-icon">📤</span>
+                      Invite Friends
+                    </button>
+                    <button className="control-btn delete-btn" onClick={handleDeleteRoom}>
+                      <span className="btn-icon">🗑</span>
+                      Delete Room
+                    </button>
+                  </>
+                ) : (
+                  <button className="control-btn leave-btn" onClick={handleLeaveRoom}>
+                    <span className="btn-icon">🚪</span>
+                    Leave Room
+                  </button>
+                )}
+              </div>
+
+              {/* Participants Section */}
+              <div className="participants-section">
+                <h3>Participants ({participants.length})</h3>
+                <div className="participants-list">
+                  {participants.map((participant, index) => (
+                    <div key={`${participant.userId}-${index}`} className="participant-item">
+                      <div className="participant-avatar">
+                        <img
+                          src={participant.avatarUrl}
+                          alt={participant.username}
+                          className="avatar-image"
+                        />
+                        <div className={`status-indicator ${participant.isActive ? 'online' : 'offline'}`}></div>
+                      </div>
+                      <div className="participant-info">
+                        <div className="participant-name">
+                          {participant.username}
+                          {participant.isHost && <span className="host-badge">Host</span>}
+                        </div>
+                      </div>
+                      <div className="participant-actions">
+                        {participant.isMuted && <span className="mute-icon">🔇</span>}
+                        {participant.isDeafened && <span className="deaf-icon">🔇</span>}
                       </div>
                     </div>
-                    <div className="participant-actions">
-                      {participant.isMuted && <span className="mute-icon">🔇</span>}
-                      {participant.isDeafened && <span className="deaf-icon">🔇</span>}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              {/* Chat Section */}
+              <div className="chat-section">
+                <ChatContainer partyId={partyId!} participants={participants} />
               </div>
             </div>
-
-            {/* Chat Section */}
-            <div className="chat-section">
-              <ChatContainer partyId={partyId!} participants={participants} />
-            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Invitation Modal */}
