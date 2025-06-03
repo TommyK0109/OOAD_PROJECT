@@ -60,10 +60,38 @@
   text-align: center;
 }
 
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 250px; /* Controls how many messages are visible (about 3-4) */
+  padding: 10px;
+  margin-bottom: 0;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+/* Top shadow to indicate more messages above */
+.messages::before {
+  content: '';
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.9), transparent);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
 .message {
   display: flex;
   flex-direction: column;
   animation: messageSlide 0.3s ease-out;
+  margin-bottom: 12px;
+  max-width: 100%;
 }
 
 @keyframes messageSlide {

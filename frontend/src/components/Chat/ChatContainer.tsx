@@ -197,7 +197,20 @@ const ChatContainer = ({ partyId }: ChatContainerProps) => {
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Only auto-scroll if user is already at bottom or new message is from current user
+    const messagesContainer = messagesEndRef.current?.parentElement;
+    if (!messagesContainer) return;
+    
+    const isScrolledToBottom = 
+      messagesContainer.scrollHeight - messagesContainer.clientHeight <= 
+      messagesContainer.scrollTop + 50; // Add tolerance of 50px
+    
+    const isNewMessageFromCurrentUser = messages.length > 0 && 
+      messages[messages.length - 1]?.userId === 'current-user';
+    
+    if (isScrolledToBottom || isNewMessageFromCurrentUser) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
   // Handle sending a new message via WebSocket
@@ -243,7 +256,18 @@ const ChatContainer = ({ partyId }: ChatContainerProps) => {
         </div>
       </div>
 
-      <div className="messages">
+      <div 
+        className="messages"
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'auto',
+          maxHeight: '250px', // Shows about 3-4 messages
+          padding: '10px',
+          scrollBehavior: 'smooth',
+        }}
+      >
         {loading ? (
           <div className="loading-messages">Loading chat history...</div>
         ) : messages.length === 0 ? (
@@ -272,7 +296,7 @@ const ChatContainer = ({ partyId }: ChatContainerProps) => {
             </div>
           ))
         )}
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} style={{ float: 'left', clear: 'both' }} />
       </div>
 
       <form
